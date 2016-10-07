@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -15,7 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
-public class MyActivity extends AppCompatActivity {
+public class MyActivity extends AppCompatActivity implements Runnable {
 
     public final static String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
     private IntentFilter myIntentFilter;
@@ -39,6 +40,11 @@ public class MyActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        // or: new Thread(this).start();
+        Thread currentThread = new Thread(this);
+        currentThread.start();
+
 
         myIntentFilter = new IntentFilter();
         // indicates whether WiFi P2P is enabled/disabled
@@ -116,4 +122,15 @@ public class MyActivity extends AppCompatActivity {
     public void onDestroy() {
         unregisterReceiver(myReceiver);
     }
+
+    @Override
+    public void run() {
+        // what the thread does
+    }
+
+    private Handler threadHandler = new Handler() {
+        public void handleMessage(android.os.Message msg) {
+            // handle messages and acting
+        }
+    };
 }
