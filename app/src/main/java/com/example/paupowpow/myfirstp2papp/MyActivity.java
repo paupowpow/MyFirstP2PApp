@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class MyActivity extends AppCompatActivity implements Runnable {
 
@@ -24,6 +25,7 @@ public class MyActivity extends AppCompatActivity implements Runnable {
     private BroadcastReceiver myReceiver;
     private WifiP2pManager myManager;
     private boolean isWifiP2pEnabled;
+    private TextView threadModifiedText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,8 @@ public class MyActivity extends AppCompatActivity implements Runnable {
                         .setAction("Action", null).show();
             }
         });
+
+        threadModifiedText = (TextView) findViewById(R.id.thread_modified_text);
 
         // or: new Thread(this).start();
         Thread currentThread = new Thread(this);
@@ -126,11 +130,19 @@ public class MyActivity extends AppCompatActivity implements Runnable {
     @Override
     public void run() {
         // what the thread does
+        try {
+            Thread.sleep(3000);
+            // signaling things to the outside world
+            threadHandler.sendEmptyMessage(0);
+        } catch (InterruptedException e) {
+            // whatever, don't know what to do
+        }
     }
 
     private Handler threadHandler = new Handler() {
         public void handleMessage(android.os.Message msg) {
             // handle messages and acting
+            threadModifiedText.setText("thread was here, biatch :O");
         }
     };
 }
