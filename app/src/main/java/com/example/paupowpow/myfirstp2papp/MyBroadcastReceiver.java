@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.net.wifi.p2p.WifiP2pManager;
 
 /**
- * Created by paulahaertel on 07.10.16.
+ * Created by paupowpow on 07.10.16.
  */
 
 public class MyBroadcastReceiver extends BroadcastReceiver {
