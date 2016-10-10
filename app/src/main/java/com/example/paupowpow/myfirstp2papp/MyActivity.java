@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.wifi.p2p.WifiP2pDevice;
+import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -13,7 +15,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static android.R.attr.action;
+import static android.R.id.message;
 
 public class MyActivity extends AppCompatActivity {
 
@@ -22,7 +31,10 @@ public class MyActivity extends AppCompatActivity {
     private WifiP2pManager.Channel myChannel;
     private BroadcastReceiver myReceiver;
     private WifiP2pManager myManager;
+
     private boolean isWifiP2pEnabled;
+    private ListView listView;
+    private ArrayAdapter myArrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +42,9 @@ public class MyActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        listView = (ListView)findViewById(R.id.peer_list_view);
+        myArrayAdapter = new ArrayAdapter<WifiP2pDevice>(this, android.R.layout.simple_list_item_1, deviceList);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -59,6 +74,37 @@ public class MyActivity extends AppCompatActivity {
         // create BroadcastReceiver
         myReceiver = new MyBroadcastReceiver(myManager, myChannel, this);
 
+        // detects available peers that are in range
+        // asynchronous
+        // if discovery process succeeds and detects peers:
+        // WIFI_P2P_PEERS_CHANGED_ACTION intent -> listen for it
+        myManager.discoverPeers(myChannel, new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+                // only notifies that discovery process succeeded, does not give info on peers
+            }
+
+            @Override
+            public void onFailure(int i) {
+                // ...
+            }
+        });
+
+        // broadcast when peer discovery succeeds
+        if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
+            // request available peers from wifi p2p manager
+            // asynchronous, calling activity is notified with a callback
+            // on PeerListListener.onPeersAvailable()
+            if (myManager != null) {
+                myManager.requestPeers(myChannel, new WifiP2pManager.PeerListListener() {
+                    @Override
+                    public void onPeersAvailable(WifiP2pDeviceList peers) {
+                        deviceList.clear();
+                        deviceList.addAll(peers.getDeviceList());
+                    }
+                });
+            }
+        }
     }
 
     @Override
@@ -116,4 +162,6 @@ public class MyActivity extends AppCompatActivity {
     public void onDestroy() {
         unregisterReceiver(myReceiver);
     }
+
+    private List<WifiP2pDevice> deviceList = new ArrayList<WifiP2pDevice>();
 }
