@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_marginTop="?attr/actionBarSize"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/activity_my">
+    android:layout_height="match_parent" >
 
-    <EditText android:id="@+id/edit_message"
-        android:layout_width="0dp"
+    <TextView android:id="@+id/broadcast_status"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/edit_message"
-        android:layout_weight="1"/>
-    
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="@string/button_send"
-        android:layout_weight="1"
-        android:onClick="sendMessage"/>
+        android:text="status"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textAlignment="center" />
 
-</LinearLayout>
+    <Button android:id="@+id/discover_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/broadcast_status"
+        android:text="discover peers" />
+
+    <ListView android:id="@+id/peer_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/discover_button"
+        android:background="@color/list_bg"></ListView>
+
+</RelativeLayout>

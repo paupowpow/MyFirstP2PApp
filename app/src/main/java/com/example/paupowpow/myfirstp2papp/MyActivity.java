@@ -2,19 +2,15 @@ package com.example.paupowpow.myfirstp2papp;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -22,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.R.attr.action;
-import static android.R.id.message;
 
 public class MyActivity extends AppCompatActivity {
 
@@ -45,15 +40,6 @@ public class MyActivity extends AppCompatActivity {
 
         listView = (ListView)findViewById(R.id.peer_list_view);
         myArrayAdapter = new ArrayAdapter<WifiP2pDevice>(this, android.R.layout.simple_list_item_1, deviceList);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         myIntentFilter = new IntentFilter();
         // indicates whether WiFi P2P is enabled/disabled
@@ -141,16 +127,6 @@ public class MyActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    // Called when the user clicks the Send button
-    public void sendMessage(View view) {
-        // Do something
-        Intent intent = new Intent(this, DisplayMessageActivity.class);
-        EditText editText = (EditText) findViewById(R.id.edit_message);
-        String message = editText.getText().toString();
-        intent.putExtra(EXTRA_MESSAGE, message);
-        startActivity(intent);
     }
 
     public void setIsWifiP2pEnabled(boolean isWifiP2pEnabled) {
